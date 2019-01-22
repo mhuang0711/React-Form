@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Table from './Table';
+import TableList from './TableList.json'
+import Form from './Form'
 
 class App extends Component {
+  state = {
+    tableData: TableList
+  }
+  removeRow = index => {
+    const { tableData } = this.state;
+    this.setState({
+      tableData: tableData.filter((data, i) => {
+        return i !== index;
+      })
+    })
+  }
+  handleSubmit = newRow => {
+    this.setState({
+      tableData: [...this.state.tableData, newRow]
+    })
+  }
   render() {
+    const { tableData } = this.state
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Table tableData={tableData} removeRow={this.removeRow} />
+        <Form handleSubmit={this.handleSubmit} />
       </div>
     );
   }
