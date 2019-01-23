@@ -6,7 +6,17 @@ import Form from './Form'
 
 class App extends Component {
   state = {
-    tableData: TableList
+    tableData: TableList,
+    fetchData: []
+  }
+  componentDidMount() {
+    fetch('https://en.wikipedia.org/w/api.php?action=opensearch&search=Seona+Dancing&format=json&origin=*')
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          fetchData: data
+        })
+      })
   }
   removeRow = index => {
     const { tableData } = this.state;
@@ -22,14 +32,27 @@ class App extends Component {
     })
   }
   render() {
-    const { tableData } = this.state
+    const { tableData, fetchData } = this.state
     return (
       <div className="App">
         <Table tableData={tableData} removeRow={this.removeRow} />
         <Form handleSubmit={this.handleSubmit} />
+        <List fetchData={fetchData} />
       </div>
     );
   }
 }
+const List = props => {
+  const liList = props.fetchData.map((val, index) => {
+    return (
+      <li key={index}>
+        {val}
+      </li>
+    )
+  })
+  return (
+    <ul>{liList}</ul>
+  )
 
+}
 export default App;
